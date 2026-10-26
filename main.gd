@@ -141,59 +141,14 @@ func _build_hero() -> void:
     hero.add_child(collider)
     hero_visual = Node3D.new()
     hero.add_child(hero_visual)
-    # Shadow Quest 3D: dark leather-and-steel fantasy archer.
-    var steel := Color(0.42, 0.47, 0.53)
-    var bright_steel := Color(0.72, 0.76, 0.79)
-    var dark_steel := Color(0.12, 0.15, 0.19)
-    var leather := Color(0.10, 0.085, 0.075)
-    var cloth := Color(0.09, 0.10, 0.13)
-    var red := Color(0.48, 0.045, 0.065)
-    var skin := Color(0.70, 0.49, 0.36)
-    var hair := Color(0.20, 0.105, 0.055)
-    var metal_trim := Color(0.58, 0.43, 0.22)
-    # Dark tunic and layered chest leather
-    _box(hero_visual, Vector3(0, 1.08, 0), Vector3(0.70, 0.82, 0.40), cloth)
-    _box(hero_visual, Vector3(0, 1.18, -0.225), Vector3(0.70, 0.62, 0.09), leather)
-    _box(hero_visual, Vector3(0, 1.12, -0.278), Vector3(0.10, 0.50, 0.035), steel)
-    # Long split tunic panels
-    _box(hero_visual, Vector3(-0.20, 0.66, -0.01), Vector3(0.30, 0.40, 0.38), cloth)
-    _box(hero_visual, Vector3(0.20, 0.66, -0.01), Vector3(0.30, 0.40, 0.38), cloth)
-    # Red waist belt and metal buckle
-    _box(hero_visual, Vector3(0, 0.78, -0.01), Vector3(0.77, 0.16, 0.45), red)
-    _box(hero_visual, Vector3(0, 0.79, -0.255), Vector3(0.18, 0.14, 0.045), metal_trim)
-    _box(hero_visual, Vector3(0, 0.79, -0.282), Vector3(0.09, 0.08, 0.025), dark_steel)
-    # Head, short brown hair, and a dark neck scarf
-    _sphere(hero_visual, Vector3(0, 1.78, 0), 0.265, skin)
-    _sphere(hero_visual, Vector3(0, 1.91, 0.015), 0.275, hair)
-    _box(hero_visual, Vector3(0, 1.84, -0.20), Vector3(0.43, 0.12, 0.16), hair)
-    _box(hero_visual, Vector3(0, 1.56, 0.03), Vector3(0.48, 0.16, 0.40), cloth)
-    # Layered metallic shoulder guards, vambraces, gloves, and knee-high boots
-    for side in [-1.0, 1.0]:
-        _sphere(hero_visual, Vector3(side * 0.43, 1.47, 0), 0.255, steel)
-        _box(hero_visual, Vector3(side * 0.44, 1.49, -0.08), Vector3(0.34, 0.13, 0.31), bright_steel)
-        _box(hero_visual, Vector3(side * 0.49, 1.12, 0), Vector3(0.22, 0.48, 0.25), leather)
-        _box(hero_visual, Vector3(side * 0.50, 1.03, -0.12), Vector3(0.25, 0.29, 0.12), steel)
-        _box(hero_visual, Vector3(side * 0.50, 0.99, -0.19), Vector3(0.20, 0.19, 0.05), bright_steel)
-        _sphere(hero_visual, Vector3(side * 0.50, 0.82, -0.03), 0.12, leather)
-        _box(hero_visual, Vector3(side * 0.22, 0.43, 0), Vector3(0.27, 0.63, 0.31), cloth)
-        _box(hero_visual, Vector3(side * 0.22, 0.37, -0.06), Vector3(0.29, 0.25, 0.34), steel)
-        _box(hero_visual, Vector3(side * 0.22, 0.20, -0.11), Vector3(0.31, 0.36, 0.40), leather)
-        _box(hero_visual, Vector3(side * 0.22, 0.08, -0.16), Vector3(0.33, 0.16, 0.48), dark_steel)
-        _box(hero_visual, Vector3(side * 0.22, 0.11, -0.405), Vector3(0.34, 0.08, 0.10), leather)
-    # Bow carried along the character's back (rear is +Z)
-    _box(hero_visual, Vector3(0.50, 1.50, 0.31), Vector3(0.07, 1.22, 0.07), leather)
-    _box(hero_visual, Vector3(0.50, 2.10, 0.31), Vector3(0.09, 0.10, 0.09), metal_trim)
-    _box(hero_visual, Vector3(0.50, 0.90, 0.31), Vector3(0.09, 0.10, 0.09), metal_trim)
-    # Quiver strapped diagonally across the back with visible arrow shafts
-    _box(hero_visual, Vector3(-0.24, 1.49, 0.30), Vector3(0.28, 0.70, 0.25), leather)
-    _box(hero_visual, Vector3(-0.24, 1.16, 0.30), Vector3(0.30, 0.10, 0.27), red)
-    for i in range(5):
-        var arrow_x := -0.34 + float(i) * 0.05
-        _box(hero_visual, Vector3(arrow_x, 1.98, 0.30), Vector3(0.025, 0.62, 0.025), metal_trim)
-        _box(hero_visual, Vector3(arrow_x, 2.27, 0.30), Vector3(0.055, 0.10, 0.035), bright_steel)
-    # Small belt pouches
-    _box(hero_visual, Vector3(-0.39, 0.65, -0.04), Vector3(0.16, 0.20, 0.20), leather)
-    _box(hero_visual, Vector3(0.39, 0.65, -0.04), Vector3(0.16, 0.20, 0.20), leather)
+    # Load the standalone low-poly archer mesh asset from assets/.
+    var archer_mesh := load("res://assets/shadow_archer.obj") as Mesh
+    if archer_mesh != null:
+        var archer_instance := MeshInstance3D.new()
+        archer_instance.mesh = archer_mesh
+        hero_visual.add_child(archer_instance)
+    else:
+        push_warning("Archer OBJ did not import; check assets/shadow_archer.obj")
     pivot = Node3D.new()
     pivot.position.y = 1.55
     hero.add_child(pivot)
